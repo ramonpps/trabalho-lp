@@ -1,6 +1,7 @@
 import System.Environment (getArgs)
 import Data.List (sortBy)
 import qualified Data.Map as M
+import Text.Printf (printf) -- Importação nova para formatar em formato de tabela (print formatado)
 
 replaceChar :: String -> Char -> Char
 replaceChar sep c = if c `elem` sep then ' ' else c
@@ -21,8 +22,12 @@ getFrequencies res sep text =
 compareEntries :: (String, Int) -> (String, Int) -> Ordering
 compareEntries (w1, f1) (w2, f2) = compare f2 f1 <> compare w1 w2
 
-printEntry :: (String, Int) -> IO ()
-printEntry (w, f) = putStrLn $ w ++ ": " ++ show f
+-- Função atualizada para alinhar como tabela usando printf
+printEntry :: [String] -> (String, Int) -> IO ()
+printEntry res (w, f) = 
+    if w `elem` res
+        then printf "%-15s | Freq: %-3d | (%d ocorrências * peso 2)\n" w f (f `div` 2)
+        else printf "%-15s | Freq: %-3d | (%d ocorrências * peso 1)\n" w f f
 
 main :: IO ()
 main = do
@@ -30,6 +35,8 @@ main = do
     if length args /= 4
         then putStrLn "Uso: ./bow <res.txt> <sep.txt> <c1.txt> <c2.txt>"
         else do
+            putStrLn "" -- quebra de linha p/ formatacao
+
             let [fRes, fSep, fC1, fC2] = args
             resContent <- readFile fRes
             sepContent <- readFile fSep
@@ -49,11 +56,11 @@ main = do
                              , let f2 = M.findWithDefault 0 w freq2
                              , isSimilar f1 f2 ]
 
-                somaF1      = sum (M.elems freq1)
+                somaF1       = sum (M.elems freq1)
                 similaridade = if somaF1 == 0 then 0.0 else fromIntegral m / fromIntegral somaF1
 
-            putStrLn "Relatório de Frequências(C1)"
-            mapM_ printEntry sortedF1
+            putStrLn "=== RELATÓRIO DE FREQUÊNCIAS (C1) ==="
+            mapM_ (printEntry res) sortedF1
 
             putStrLn "\n=== MÉTRICAS DE SIMILARIDADE ==="
             putStrLn $ "Valor de m    : " ++ show m
