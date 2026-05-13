@@ -1,10 +1,10 @@
 CC=ghc
 TARGET=bow
 
-RES_FILE = res/dart.txt
-SEP_FILE = sep/dart.txt
-C1_FILE  = codigos/text.dart
-C2_FILE  = codigos/button.dart
+RES_FILE = res/python.txt
+SEP_FILE = sep/python.txt
+C1_FILE  = codigos/fatorial_iterativo.py
+C2_FILE  = codigos/fatorial_recursivo.py
 
 all: $(TARGET)
 

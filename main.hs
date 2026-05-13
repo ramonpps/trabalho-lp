@@ -14,7 +14,7 @@ toWeight res w = (w, if w `elem` res then 2 else 1)
 getFrequencies :: [String] -> String -> String -> M.Map String Int
 getFrequencies res sep text =
     let cleanText = replaceSeparators sep text
-        tokens = words cleanText //'arroz com feijao' -> ['arroz', 'com', feijao']
+        tokens = words cleanText -- 'arroz com feijao' -> ['arroz', 'com', feijao']
         weights = map (toWeight res) tokens
     in M.fromListWith (+) weights
 
